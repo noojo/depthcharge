@@ -1,0 +1,578 @@
+<html>
+<head>
+	<title>Audio Test</title>
+	<style type="text/css">
+	body {
+		/*background-image: url('/music/gifs/ocean-sunset.gif');*/ 
+		/*background-repeat: repeat;*/
+		background-size: cover;
+		/*background-attachment: fixed;*/
+		background-color: rgb(40,40,40);
+		margin:0;
+		padding: 0;
+		orient: portrait;
+	}
+
+
+
+
+	div {
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
+
+	div.button {
+		border: 1px solid rgb(216, 216, 216);
+		display: inline-block;
+		padding: 1.5em;
+		width: 250px;
+		text-align: center;
+		margin: 16px;
+		font-size: 1.5em;
+		height: auto;
+		cursor: default;
+	}
+
+	div.messages {
+		border: 1px solid rgb(216, 216, 216);
+		font-family: verdana, sans-serif;
+		font-size: 1.0em;
+		text-align: center;
+		width: 98%;
+		background-color: rgb(0,0,0);
+		color: rgb(240,240,240);
+		margin: 0px;
+
+		position: fixed;
+		z-index: 3;
+		opacity: 1.0;
+		height: auto;
+	}
+
+	span.imess {
+		background-color: rgb(0,0,0);
+		font-size: 2.0em;
+	}
+
+	div.genre {
+		border: 1px solid rgb(216, 216, 216);
+		font-family: verdana, sans-serif;
+		font-size: 3.5em;
+		text-align: center;
+		width: 100%;
+		height: 25%;
+		background-color: rgb(14,14,14);
+		color: rgb(240,240,240);
+		margin-bottom: 6px;
+		/*margin-left: 18%;*/
+		opacity: .65;
+	}
+
+	div.boxy {
+		display:-ms-flexbox;
+		-ms-flex-pack:center;
+		-ms-flex-align:center;
+
+		/* Firefox */
+		display:-moz-box;
+		-moz-box-pack:center;
+		-moz-box-align:center;
+
+		/* Safari, Opera, and Chrome */
+		display:-webkit-box;
+		-webkit-box-pack:center;
+		-webkit-box-align:center;
+
+		/* W3C */
+		display:box;
+		box-pack:center;
+		box-align:center;
+
+		
+	}
+
+	div.song {
+		border: 1px solid rgb(216, 216, 216);
+		font-family: verdana, sans-serif;
+		font-size: 4.0em;
+		text-align: center;
+		width: 97%;
+		height: 4.2em;
+		background-color: rgb(14,14,14);
+		color: rgb(255,220,160);
+		margin-left: 0px;
+		margin-right: 0px;
+		margin-top: 12px;
+		margin-bottom: 12px;
+		opacity: .65;
+		padding: 8px;
+		padding-top: 1.0em;
+		display: inline-block;
+	}
+
+	div.genre.shrink {
+  		-webkit-animation: shrink 2s;
+  		animation: shrink 2s;
+	}
+
+	div.world {
+		height: 100%;
+		width: 100%;
+		text-align: center;
+		visibility: visible;
+		padding: 0px;
+		padding-top: 650px;
+		border: 0;
+		margin: 0;
+
+		background-color: transparent;
+
+		position: absolute;
+		left: 0;
+		top: 0;
+		/*overflow: auto;*/
+		/*background-image: url('/music/bg.jpg'); */
+		/*background-repeat: repeat;*/
+		/*background-size: cover;*/
+		/*background-attachment: fixed;*/
+
+	}
+
+	div.world.hidden {
+		visibility: hidden;
+	}
+
+	audio {
+		width: 95%;
+		border: 1px solid rgb(216, 216, 216);
+		background-color: transparent;		
+		height: 100px;
+		margin: 0;
+		margin-bottom: 32px;
+		opacity: .7;
+	}
+
+@-webkit-keyframes fadein {
+  0% { opacity: 0.0; }
+  100% { opacity: 1.0; }
+}
+
+@keyframes fadein {
+  0% { opacity: 0.0; }
+  100% { opacity: 1.0; }
+}
+
+@-webkit-keyframes zoom {
+  0% {transform: scale(1,1);  }
+  50% { transform: scale(1.025,1.025); }
+  100% {transform: scale(1,1); }  
+}
+
+@keyframes zoom {
+  0% {transform: scale(1,1);  }
+  50% { transform: scale(1.025,1.025); }
+  100% {transform: scale(1,1); }  
+}
+
+@-webkit-keyframes shrink {
+  0% {transform: scale(1,1);  }
+  50% { transform: scale(.7,.7); }
+  100% {transform: scale(.5,.5); }  
+}
+
+@keyframes shrink {
+  0% {transform: scale(1,1);  }
+  50% { transform: scale(.7,.7); }
+  100% {transform: scale(.5,.5); }  
+}
+
+@-webkit-keyframes borderpulse {
+  0% {border-color: rgb(30,30,30);  }
+  50% { border-color: rgb(230,230,230); }
+  100% {border-color: rgb(30,30,30); }
+}
+
+@keyframes borderpulse {
+  0% {border-color: rgb(30,30,30);  }
+  50% { border-color: rgb(230,230,230); }
+  100% {border-color: rgb(30,30,30); }
+}
+
+@-webkit-keyframes glow {
+  0% {background-color: transparent;  }
+  50% { background-color: rgb(230,230,230); }
+  100% {background-color: transparent; }
+}
+@keyframes glow {
+  0% {background-color: transparent;  }
+  50% { background-color: rgb(230,230,230); }
+  100% {background-color: transparent; }
+}
+
+
+	</style>
+	<script type="text/javascript">
+	var catalog = [];
+	var genres = {};
+	var plist = [];
+	var plist_index = 0;
+	var g_pos = 0;
+	var keys = [];
+	function initCatalog () {
+		var ht = new XMLHttpRequest();
+		ht.onreadystatechange = function() {
+			if ( ht.readyState === 4 ){
+				catalog = JSON.parse(ht.responseText);
+				drawGenres();
+			}
+		};
+		ht.open('GET', 'http://mediatron.local/music/all.tags.json', false);
+		ht.send(null);
+
+
+		window.addEventListener('orientationchange', orient, true);
+
+		var s = document.querySelector('#search');
+		  	s.onkeypress = function(e) {
+				if (!e) e = window.event;
+			    var keyCode = e.keyCode || e.which;
+			    if (keyCode === 13){
+			      // Enter pressed
+			      //console.log(keyCode);
+			      var x = document.querySelector('#search');
+
+			      console.log(x.value);
+			      findIt(x.value);
+			      return false;
+			    }
+			 };
+	}
+
+	function findIt(s) {
+		console.log('finding ' + s);
+		
+		removeSongs();
+
+		var w = document.querySelector('#songs');
+		var n=0;
+		for (var i = 0; i < catalog.length; i++) {
+			//console.log(catalog[i].artist[0]);
+
+			if ( catalog[i].artist[0] ) {
+				if ( 
+					catalog[i].artist[0].toLowerCase().indexOf(s.toLowerCase()) > -1  ||
+					catalog[i].title.toLowerCase().indexOf(s.toLowerCase()) > -1
+					) {
+					//console.log(catalog[i]);
+					plist.push(catalog[i]);
+					var d = document.createElement('div');
+					d.innerHTML = catalog[i].title + ' - ' + catalog[i].artist;
+					d.className = 'song boxy';
+					d.onclick = playme;
+					d.filename = catalog[i].filename;
+					d.index = n; 
+					w.appendChild(d);
+					n++;
+				}
+			}
+
+		}
+		w.className = 'world';
+		var g = document.querySelector('#genres');
+		g.className = 'world hidden';
+
+		g_pos = window.pageYOffset;
+		window.scrollTo(0,0);
+		console.log('done');
+	}
+
+	function sortByGenreQ() {
+		keys = [];
+		for ( k in genres) {
+			keys.push(generes[k]);
+		}
+		keys.sort(bycount);
+	}
+
+	function bycount(a,b) {
+		if(genres[a].count < genres[b].count) {
+			return 1;
+		}
+		if(genres[a].count > genres[b].count) {
+			return -1;
+		}
+		return 0;
+	}
+
+
+	function orient() {
+
+		var w = document.querySelector('#statusbox');
+
+		if ( window.orientation === -90) {
+			//w.style.transform = 'rotate(-90deg)';
+			//w.style.webkitTransform = 'rotate(-90deg)';
+			//w.style.webkitTransformOrigin = '160px 160px';
+			w.style.webkitTransform = 'scale(1,.5) translate(0px, -250px)';
+			// w.style.left = '0px';
+			// w.style.top = '0px';
+			// w.style.position = 'absolute';
+		}
+		if ( window.orientation === 90) {
+			//w.style.transform = 'rotate(90deg)';
+			//w.style.webkitTransform = 'rotate(90deg)';
+			w.style.webkitTransform = 'scale(1,.5) translate(0px, -250px)';
+		}
+		if ( window.orientation === 0) {
+			//w.style.transform = 'rotate(0deg)';
+			//w.style.webkitTransform = 'rotate(0deg)';
+			w.style.webkitTransform = 'scale(1,1)';
+			// w.style.position = 'fixed';
+		}
+	}
+
+
+	function drawGenres() {
+		for (var i = 0; i < catalog.length; i++) {
+			var g = catalog[i].genre;
+			//if ( g.length > 1) { console.log(g);}
+			//if (g[0] === undefined) { continue;}
+			
+			for (var j = 0; j < g.length; j++) {
+				var gl = g[j].toLowerCase();
+				if ( genres[gl] === undefined) {
+					var ob = { count: 1, title: g[j] };
+					genres[gl] = ob;
+				} else {
+					genres[gl].count = genres[gl].count + 1;
+				}
+			}
+		};
+
+		keys = Object.keys(genres);
+		keys.sort(bycount);
+
+		var w = document.querySelector('.world');
+		
+		for (var i = 0; i < keys.length; i++) {
+			
+		//for (key in genres) {
+			var d = document.createElement('div');
+			if ( keys[i] !== undefined) {
+				try {
+				d.innerHTML = genres[keys[i]].title + '<br>' + genres[keys[i]].count; 
+				d.className = 'genre boxy';
+				d.genre = keys[i];
+				d.onclick = shrinkGenres;
+				w.appendChild(d);
+				}
+				catch (e) {
+					console.log(keys[i]);
+				}
+			}
+		}
+
+		
+	}
+
+	function nextSong() {
+		var a = document.querySelector('#aplayer');
+		var m = document.querySelector('#messages');
+		var sb = document.querySelector('#statusbox');
+		plist_index = (plist_index + 1) % plist.length;
+		a.src = plist[plist_index].filename.substr(4);
+		a.style.backgroundColor = 'rgb(200,100,100)';
+		a.load();
+		a.play();
+	}
+
+	function errorFallback() {
+            nextSong();
+    }
+
+    function readyUp(e) {
+    	var a = document.querySelector('#aplayer');
+    	var sb = document.querySelector('#statusbox');
+    	var m = document.querySelector('#messages');
+    	if ( m === null ) {
+    		setTimeout(readyUp(e), 500);
+    		return;
+    	}
+    	a.style.backgroundColor = 'rgb(100,200,100)';
+    	var s = plist[plist_index];
+    	m.innerHTML = s.title + ' - ' + s.artist;
+    	//m.style.backgroundColor = 'rgb(80,80,80)';
+    }
+
+    function playme(e) {
+    	var f = e.target.filename;
+    	if ( e.target.index !== undefined) {
+    		plist_index = e.target.index;
+    	}
+
+    	var a = document.querySelector('#aplayer');
+    	a.pause();
+    	a.src = f.substr(4);
+		a.load();
+		a.play();
+		var m = document.querySelector('#messages');
+		var s = plist[plist_index];
+    	m.innerHTML = s.title + ' - ' + s.artist;
+    }
+
+    function removeSongs() {
+    	//remove songs
+    	var w = document.querySelector('#songs');
+		while( w.firstChild) {
+			w.removeChild(w.firstChild);
+		}
+    }
+
+	function shrinkGenres(e) {
+		
+		var w = document.querySelector('#songs');
+		var a = document.querySelector('#aplayer');
+		var m = document.querySelector('#messages');
+
+		if ( m === null ) {
+    		//setTimeout(shrinkGenres(e), 500);
+    		return;
+    	}
+
+		removeSongs();
+		
+		a.style.backgroundColor = 'rgb(200,100,100)';
+		a.addEventListener('ended', nextSong, false);
+		a.addEventListener('error',errorFallback,true);
+		a.addEventListener('loadeddata',readyUp,true);
+		plist = [];
+		var n = 0;
+		for (var i = 0; i < catalog.length; i++) {
+
+			var t = catalog[i].genre;
+			for (var j = 0; j < t.length; j++) {
+			
+				if ( t[j] ) {
+					if ( t[j].toLowerCase() === e.target.genre) {
+						//console.log(catalog[i]);
+						plist.push(catalog[i]);
+						var d = document.createElement('div');
+						d.innerHTML = catalog[i].title + ' - ' + catalog[i].artist;
+						d.className = 'song boxy';
+						d.onclick = playme;
+						d.filename = catalog[i].filename;
+						d.index = n; 
+						w.appendChild(d);
+						n++;
+					}
+				}
+			};
+
+		}
+
+		shuffle();
+		
+		a.src = plist[0].filename.substr(4);
+		m.innerHTML = 'Loading...';
+		a.load();
+		
+		w.className = 'world';
+		var g = document.querySelector('#genres');
+		g.className = 'world hidden';
+
+		g_pos = window.pageYOffset;
+		window.scrollTo(0,0);
+	}
+
+	function shuffle() {
+		console.log('shuffle');
+		//reorder plist
+		for (var i = 0; i < plist.length; i++) {
+			var s = 0;
+			var t = 0;
+			//while ( s != t ) {
+				s = Math.floor(Math.random() * plist.length);
+				t = Math.floor(Math.random() * plist.length);
+			//}
+			//if ( s !== t) {
+				var src = plist[s];
+				plist[s] = plist[t];
+				plist[t] = src;
+			//}
+		};
+
+		//remove songs
+		removeSongs();
+
+		var w = document.querySelector('#songs');
+		//re-add songs
+		var n = 0;
+		for (var i = 0; i < plist.length; i++) {
+				var d = document.createElement('div');
+				d.innerHTML = plist[i].title + ' - ' + plist[i].artist;
+				d.className = 'song boxy';
+				d.onclick = playme;
+				d.filename = plist[i].filename;
+				d.index = n; 
+				w.appendChild(d);
+				n++;
+		}
+	}
+
+	function toGenre() {
+		
+		var s = document.querySelector('#songs');
+		s.className = "world hidden";
+		var g = document.querySelector('#genres');
+		if ( g.className.indexOf('hidden') < 0 ) {
+			window.scrollTo(0,0);
+		} else {
+			window.scrollTo(0, g_pos);
+		}
+		g.className = 'world';
+		//g.scrollTo(0,0);
+	}
+
+	function mix(e) {
+
+	}
+
+	
+
+	function searchg(e){
+		console.log(e);
+ 		var s = document.querySelector('#search');
+ 		console.log(s.value);	
+ 		return false;
+  	}
+
+  	
+
+	</script>
+</head>
+<body onload="initCatalog()">
+	<div class='wrap'>
+<div class="messages boxy" id="statusbox">
+<span class="imess" id="messages">=o=</span>
+<audio id="aplayer" controls preload onclick="document.aplayer.play()"></audio>
+
+<div class="button" onclick="toGenre();">Genre</div>
+<div class="button" onclick="shuffle();">Shuffle</div>
+<div class="button" onclick="nextSong();">Skip</div>
+<div class="button" onclick="mix();">Mix</div>
+
+<input type="text" id="search"></input>
+
+</div>
+
+<div class="world" id='genres'>
+
+</div>
+
+<div class="world hidden" id='songs'>
+		
+</div>
+</div>
+</body>
+</html>

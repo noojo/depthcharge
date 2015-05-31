@@ -1,0 +1,25 @@
+
+App Name:
+DepthCharge
+Client ID for Mobile Client, Web API, and eyeQ
+582912-203D3664F314C618AF20562C0EF17B5E
+License information for GNSDK
+Client ID: 582912
+Client Tag: 203D3664F314C618AF20562C0EF17B5E
+License String:
+
+-- BEGIN LICENSE v1.0 C16A5F14 --
+licensee: Gracenote, Inc.
+name: 
+notes: Lic Gen 2.1
+start_date: 0000-00-00
+client_id: 582912
+musicid_file: enabled
+musicid_search: enabled
+musicid_stream: enabled
+musicid: enabled
+playlist: enabled
+-- SIGNATURE C16A5F14 --
+lAADAgAebJYssJu1ag9S6Oe9WA3YrWEODTweo4L0uxv8jwbAAB6Ua42bRnek1N/7RoqZMS2yEfDknQ/XozwqJQLEVEQ=
+-- END LICENSE C16A5F14 --
+
